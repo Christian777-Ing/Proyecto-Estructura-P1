@@ -1,3 +1,4 @@
+package Listas;
 public interface ListAgenda<E> {
 
     public void add(E element);

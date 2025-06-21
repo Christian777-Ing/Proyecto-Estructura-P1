@@ -1,5 +1,7 @@
+package Listas;
 
 // Clase de Lista circular doblemente enlazada
+
 public class CircledDoubleLinkedList<E> implements ListAgenda<E>{
     private NodoDobleCircular<E> cabeza; // Referencia al primer nodo de la lista
     private int tamaño; // Tamaño de la lista (número de nodos)

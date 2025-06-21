@@ -1,6 +1,6 @@
 public class Direccion {
 
-     private String tipo;              // "Casa", "Trabajo", etc.
+    private String tipo;              // "Casa", "Trabajo", etc.
     private String callePrincipal;
     private String calleSecundaria;
     private String ciudad;
