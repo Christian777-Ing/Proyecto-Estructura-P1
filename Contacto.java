@@ -12,7 +12,7 @@ public abstract class Contacto {
     private ListAgenda<String> telefonos = new ArrayListAgenda<>();
     private ListAgenda<String> correos = new ArrayListAgenda<>();
     private ListAgenda<Direccion> direcciones = new ArrayListAgenda<>();
-    private ListAgenda<Foto> fotos = new ArrayListAgenda<>();
+    private ListAgenda<Foto> fotos = new CircledDoubleLinkedList<>();
     private ListAgenda<FechaImportante> fechasImportantes = new ArrayListAgenda<>();
     private ListAgenda<Contacto> contactosRelacionados = new CircledDoubleLinkedList<>();
 
