@@ -6,6 +6,7 @@ public class CircledDoubleLinkedList<E> implements ListAgenda<E>{
 
 
     // Clase NodoDobleCircular para representar cada nodo en la lista
+
 class NodoDobleCircular<E> {
     E dato;                        // Dato almacenado en el nodo
     NodoDobleCircular<E> siguiente; // Referencia al siguiente nodo

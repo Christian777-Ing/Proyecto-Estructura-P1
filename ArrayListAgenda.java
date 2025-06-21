@@ -160,7 +160,7 @@ public class ArrayListAgenda<E> implements ListAgenda<E> {
     }
 
     @Override
-    public E getFirst() {
+    public E getFirst() { //Devuelve el primer elemento
         if(isEmpty()){
             throw new NoSuchElementException("Lista Vacía");
         }
@@ -168,7 +168,7 @@ public class ArrayListAgenda<E> implements ListAgenda<E> {
     }
 
     @Override
-    public E getLast() {
+    public E getLast() { //Devuelve el último elemento
         if(isEmpty()){
             throw new NoSuchElementException("Lista Vacía");
         }
