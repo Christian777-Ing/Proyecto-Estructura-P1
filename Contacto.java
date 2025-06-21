@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Listas.ArrayListAgenda;
+import Listas.CircledDoubleLinkedList;
 import Listas.ListAgenda;
 
 public abstract class Contacto {
@@ -13,7 +14,7 @@ public abstract class Contacto {
     private ListAgenda<Direccion> direcciones = new ArrayListAgenda<>();
     private ListAgenda<Foto> fotos = new ArrayListAgenda<>();
     private ListAgenda<FechaImportante> fechasImportantes = new ArrayListAgenda<>();
-    private ListAgenda<Contacto> contactosRelacionados = new ArrayListAgenda<>();
+    private ListAgenda<Contacto> contactosRelacionados = new CircledDoubleLinkedList<>();
 
     // Atributos personalizados (ej. Instagram, Cargo, Departamento)
     protected Map<String, String> atributosGenerales = new HashMap<>();
