@@ -27,4 +27,8 @@ public class Foto {
     public String toString() {
         return descripcion + " (" + urlImagen + ")";
     }
+
+    public void jahsh(){
+        
+    }
 }
