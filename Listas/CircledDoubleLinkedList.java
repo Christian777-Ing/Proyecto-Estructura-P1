@@ -93,6 +93,7 @@ class NodoDobleCircular<E> {
         return actual.dato;
     }
 
+
     // Método para eliminar el primer elemento de la lista
     public E removeFirst() {
         if (cabeza == null) {
@@ -151,6 +152,7 @@ class NodoDobleCircular<E> {
         tamaño--;
         return actual.dato;
     }
+
 
     // Método para verificar si un elemento está en la lista
     public boolean contains(E dato) {
@@ -238,4 +240,7 @@ class NodoDobleCircular<E> {
         count = 0;
     }
 }
+
+
+
 }
