@@ -1,7 +1,8 @@
 package Listas;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayListAgenda<E> implements ListAgenda<E> {
+public class ArrayListAgenda<E> implements ListAgenda<E>, Iterable<E> {
     
     private E[] array;
     private int tamaño;
@@ -151,5 +152,40 @@ public class ArrayListAgenda<E> implements ListAgenda<E> {
             throw new NoSuchElementException("Lista Vacía");
         }
         return array[tamaño - 1];
+    
+    
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+         return new CustomArrayListIterator();
+    }
+
+        public class CustomArrayListIterator implements Iterator<E> {
+        private int currentIndex = 0;
+
+        // Devuelve true si hay más elementos por iterar
+        @Override
+        public boolean hasNext() {
+            return currentIndex < tamaño;
+        }
+
+        // Devuelve el siguiente elemento
+        @Override
+        public E next() {
+            if (!hasNext()) throw new IllegalStateException("No hay mas contactos");
+            return array[currentIndex++];
+        }
+
+        // Elimina el elemento actual
+        @Override
+        public void remove() {
+            if (currentIndex <= 0) throw new IllegalStateException("No hay contactos para remover");
+            for (int i = currentIndex - 1; i < tamaño - 1; i++) {
+                array[i] = array[i + 1];
+            }
+            array[--tamaño] = null;
+            currentIndex--;        
+        }
     }
 }
