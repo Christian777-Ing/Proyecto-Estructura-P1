@@ -80,5 +80,9 @@ public abstract class Contacto {
         }
     }
 
+    public String getTelefonoPrincipal() {
+        return telefonos.isEmpty() ? null : telefonos.getFirst();
+    }
+
     
 }

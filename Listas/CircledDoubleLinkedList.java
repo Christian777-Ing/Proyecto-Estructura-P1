@@ -81,6 +81,18 @@ class NodoDobleCircular<E> {
         return cabeza.anterior.dato; // La cola está almacenada en cabeza.anterior
     }
 
+    public E get(int index) {
+        if (index < 0 || index >= tamaño) {
+            throw new IndexOutOfBoundsException("Índice inválido");
+        }
+
+        NodoDobleCircular<E> actual = cabeza;
+        for (int i = 0; i < index; i++) {
+            actual = actual.siguiente;
+        }
+        return actual.dato;
+    }
+
     // Método para eliminar el primer elemento de la lista
     public E removeFirst() {
         if (cabeza == null) {
@@ -114,6 +126,30 @@ class NodoDobleCircular<E> {
         }
         tamaño--;
         return datoEliminado;
+    }
+
+    public E remove(int index) {
+        if (index < 0 || index >= tamaño) {
+            throw new IndexOutOfBoundsException("Índice inválido");
+        }
+
+        NodoDobleCircular<E> actual = cabeza;
+        for (int i = 0; i < index; i++) {
+            actual = actual.siguiente;
+        }
+
+        if (tamaño == 1) {
+            cabeza = null;
+        } else {
+            actual.anterior.siguiente = actual.siguiente;
+            actual.siguiente.anterior = actual.anterior;
+            if (actual == cabeza) {
+                cabeza = actual.siguiente;
+            }
+        }
+
+        tamaño--;
+        return actual.dato;
     }
 
     // Método para verificar si un elemento está en la lista

@@ -9,6 +9,8 @@ public interface ListAgenda<E> {
 
     public E removeFirst();
 
+    public E remove(int index);
+
     public boolean isEmpty();
 
     public int size();
@@ -18,5 +20,7 @@ public interface ListAgenda<E> {
     public E getFirst();
 
     public E getLast();
+
+    public E get(int index);
     
 } 
