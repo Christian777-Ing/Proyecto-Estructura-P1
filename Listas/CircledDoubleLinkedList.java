@@ -1,8 +1,10 @@
 package Listas;
+import java.util.Iterator;
+
 
 // Clase de Lista circular doblemente enlazada
 
-public class CircledDoubleLinkedList<E> implements ListAgenda<E>{
+public class CircledDoubleLinkedList<E> implements ListAgenda<E>, Iterable<E>{
     private NodoDobleCircular<E> cabeza; // Referencia al primer nodo de la lista
     private int tamaño; // Tamaño de la lista (número de nodos)
 
@@ -165,4 +167,39 @@ class NodoDobleCircular<E> {
         } while (actual != cabeza.anterior);
         System.out.println("(cabeza en reversa)"); // Indicar el final de la lista y referencia inversa
     }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new CircularDoublyLinkedListIterator();
+    }
+
+    public class CircularDoublyLinkedListIterator implements Iterator<E> {
+    private NodoDobleCircular<E> current = cabeza;
+    private int count = 0;
+
+    @Override
+    public boolean hasNext() {
+        return count < tamaño;  // size debe estar definido en la clase de la lista
+    }
+
+    @Override
+    public E next() {
+        if (!hasNext()) throw new IllegalStateException("No more elements");
+        E data = current.dato;
+        current = current.siguiente;
+        count++;
+        return data;
+    }
+
+    public E previous() {
+        if (current == null || current.anterior == null) throw new IllegalStateException("No previous element");
+        current = current.anterior;
+        return current.dato;
+    }
+
+    public void reset() {
+        current = cabeza;
+        count = 0;
+    }
+}
 }
