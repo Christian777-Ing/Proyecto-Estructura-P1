@@ -1,5 +1,5 @@
 package Listas;
-public interface ListAgenda<E> {
+public interface ListAgenda<E> extends Iterable<E>{
 
     public void add(E element);
 

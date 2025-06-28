@@ -1,12 +1,19 @@
 public class Empresa extends Contacto {
-    private String nombreLegal;
+    private String razonSocial;
 
-    public Empresa(String nombre, String nombreLegal) {
+    public Empresa(String nombre, String razonSocial) {
         super(nombre);
-        this.nombreLegal = nombreLegal;
+        this.razonSocial = razonSocial;
     }
 
-    public String getNombreLegal() { return nombreLegal; }
-    public void setNombreLegal(String nombreLegal) { this.nombreLegal = nombreLegal; }
+    public String getNombreLegal() { return razonSocial; }
+    public void setNombreLegal(String razonSocial) { this.razonSocial = razonSocial; }
 
+@Override
+public String toString() {
+    return "Persona: " + getNombre() + " " + razonSocial +
+           ", Tel: " + getTelefonos().size() +
+           ", Direcciones: " + getDirecciones().size() +
+           ", Fotos: " + getFotos().size();
+}
 }

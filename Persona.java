@@ -7,5 +7,13 @@ public class Persona extends Contacto {
 
     public String getApellido() { return apellido; }
     public void setApellido(String apellido) { this.apellido = apellido; }
+
+@Override
+public String toString() {
+    return "Persona: " + getNombre() + " " + apellido +
+           ", Tel: " + getTelefonos().size() +
+           ", Direcciones: " + getDirecciones().size() +
+           ", Fotos: " + getFotos().size();
+}
 }
 

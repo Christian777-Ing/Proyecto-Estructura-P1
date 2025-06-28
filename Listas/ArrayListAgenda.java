@@ -2,7 +2,7 @@ package Listas;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayListAgenda<E> implements ListAgenda<E>, Iterable<E> {
+public class ArrayListAgenda<E> implements ListAgenda<E> {
     
     private E[] array;
     private int tamaño;
