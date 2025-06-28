@@ -6,9 +6,9 @@ public class Empresa extends Contacto {
 
     private String razonSocial;
 
-        public Empresa(String nombre, ListAgenda<String> telefonos, ListAgenda<String> correos,
+        public Empresa(String nombre, String razonSocial, ListAgenda<String> telefonos, ListAgenda<String> correos,
             ListAgenda<Direccion> direcciones, ListAgenda<Foto> fotos, ListAgenda<FechaImportante> fechasImportantes,
-            ListAgenda<Contacto> contactosRelacionados, Map<String, String> atributosGenerales, String razonSocial) {
+            ListAgenda<Contacto> contactosRelacionados, Map<String, String> atributosGenerales) {
         super(nombre, telefonos, correos, direcciones, fotos, fechasImportantes, contactosRelacionados, atributosGenerales);
         this.razonSocial= razonSocial;
 

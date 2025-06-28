@@ -1,9 +1,18 @@
+import java.util.Map;
+
+import Listas.ListAgenda;
+
 public class Persona extends Contacto {
+
     private String apellido;
-    public Persona(String nombre, String apellido) {
-        super(nombre);
-        this.apellido = apellido;
+
+        public Persona(String nombre, String apellido, ListAgenda<String> telefonos, ListAgenda<String> correos,
+            ListAgenda<Direccion> direcciones, ListAgenda<Foto> fotos, ListAgenda<FechaImportante> fechasImportantes,
+            ListAgenda<Contacto> contactosRelacionados, Map<String, String> atributosGenerales) {
+        super(nombre, telefonos, correos, direcciones, fotos, fechasImportantes, contactosRelacionados, atributosGenerales);
+        this.apellido= apellido;
     }
+
 
     public String getApellido() { return apellido; }
     public void setApellido(String apellido) { this.apellido = apellido; }
