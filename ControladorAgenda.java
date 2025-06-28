@@ -9,7 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ControladorAgenda {
@@ -122,16 +124,33 @@ public class ControladorAgenda {
     }
 
     public void mostrarContactos() {
-        System.out.println("\n--- Lista de contactos ---");
-        if (agenda.isEmpty()) {
-            System.out.println("No hay contactos registrados.");
-        } else {
-            for (Map.Entry<String, Contacto> entry : agenda.entrySet()) {
-                System.out.println("\nIdentificador (teléfono principal): " + entry.getKey());
+            if (agenda.isEmpty()) {
+                System.out.println("No hay contactos.");
+                return;
+            }
+            for (var entry : agenda.entrySet()) {
+                System.out.println("\nTeléfono principal: " + entry.getKey());
                 System.out.println(entry.getValue());
             }
         }
+
+    public void navegarContactos(Scanner sc) {
+        if (agenda.isEmpty()) {
+            System.out.println("No hay contactos.");
+            return;
+        }
+        List<Contacto> lista = new ArrayList<>(agenda.values());
+        int index = 0;
+        String op;
+        do {
+            System.out.println("\nContacto (" + (index+1) + "/" + lista.size() + "):\n" + lista.get(index));
+            System.out.print("[s]iguiente, [a]nterior, [q]uit: ");
+            op = sc.nextLine();
+            if (op.equals("s")) index = (index + 1) % lista.size();
+            else if (op.equals("a")) index = (index - 1 + lista.size()) % lista.size();
+        } while (!op.equals("q"));
     }
+
 
     public void guardarAgenda(String archivo) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(archivo))) {

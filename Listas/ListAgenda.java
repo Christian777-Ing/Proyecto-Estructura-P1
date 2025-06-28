@@ -1,5 +1,8 @@
 package Listas;
-public interface ListAgenda<E> extends Iterable<E>{
+
+import java.io.Serializable;
+
+public interface ListAgenda<E> extends Iterable<E>, Serializable{
 
     public void add(E element);
 

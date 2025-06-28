@@ -13,7 +13,7 @@ public abstract class Contacto implements Serializable{
     ListAgenda<String> telefonos = new ArrayListAgenda<>();
     ListAgenda<String> correos = new ArrayListAgenda<>();
     ListAgenda<Direccion> direcciones = new ArrayListAgenda<>();
-    ListAgenda<Foto> fotos = new CircledDoubleLinkedList<>();
+    ListAgenda<Foto> fotos = new CircledDoubleLinkedList<Foto>();
     ListAgenda<FechaImportante> fechasImportantes = new ArrayListAgenda<>();
     ListAgenda<Contacto> contactosRelacionados = new CircledDoubleLinkedList<>();
 

@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class FechaImportante {
+public class FechaImportante implements Serializable{
     private LocalDate fecha;
     private String descripcion; // "Cumpleaños", "Pago", etc.
 
