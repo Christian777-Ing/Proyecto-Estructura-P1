@@ -3,6 +3,7 @@ import java.util.Map;
 import Listas.ListAgenda;
 
 public class Empresa extends Contacto {
+    private static final long serialVersionUID = 1L;
 
     private String razonSocial;
 

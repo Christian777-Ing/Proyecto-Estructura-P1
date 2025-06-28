@@ -1,4 +1,5 @@
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -6,8 +7,8 @@ import Listas.ArrayListAgenda;
 import Listas.CircledDoubleLinkedList;
 import Listas.ListAgenda;
 
-public abstract class Contacto {
-
+public abstract class Contacto implements Serializable{
+    private static final long serialVersionUID = 1L;
     String nombre;
     ListAgenda<String> telefonos = new ArrayListAgenda<>();
     ListAgenda<String> correos = new ArrayListAgenda<>();

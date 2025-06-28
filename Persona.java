@@ -3,7 +3,7 @@ import java.util.Map;
 import Listas.ListAgenda;
 
 public class Persona extends Contacto {
-
+    private static final long serialVersionUID = 1L;
     private String apellido;
 
         public Persona(String nombre, String apellido, ListAgenda<String> telefonos, ListAgenda<String> correos,

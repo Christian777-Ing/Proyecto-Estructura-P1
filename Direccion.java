@@ -1,5 +1,7 @@
-public class Direccion {
+import java.io.Serializable;
 
+public class Direccion implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String tipo;              // "Casa", "Trabajo", etc.
     private String callePrincipal;
     private String calleSecundaria;
