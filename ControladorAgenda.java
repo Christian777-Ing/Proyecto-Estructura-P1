@@ -125,12 +125,12 @@ public class ControladorAgenda {
     // Atributos generales
     seguir = true;
     while (seguir) {
-        System.out.print("¿Desea añadir un atributo adicional? (s/n): ");
+        System.out.print("¿Desea añadir una red social? (s/n): ");
         String resp = sc.nextLine();
         if (resp.equalsIgnoreCase("s")) {
-            System.out.print("Nombre del atributo: ");
+            System.out.print("Nombre del la red social ");
             String attrName = sc.nextLine();
-            System.out.print("Valor del atributo: ");
+            System.out.print("Usuario : ");
             String attrValue = sc.nextLine();
             atributosGenerales.put(attrName, attrValue);
         } else {
@@ -155,7 +155,7 @@ public class ControladorAgenda {
             System.out.println("No hay contactos registrados.");
         } else {
             for (Map.Entry<String, Contacto> entry : agenda.entrySet()) {
-                System.out.println("\nIdentificador: " + entry.getKey());
+                System.out.println("\nNúmero Principal: " + entry.getKey());
                 System.out.println(entry.getValue());
             }
         }
