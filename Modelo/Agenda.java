@@ -1,11 +1,12 @@
 package Modelo;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import Modelo.Listas.CircledDoubleLinkedList;
 import Modelo.Listas.ListAgenda;
 
-public class Agenda {
+public class Agenda implements Serializable {
     private ListAgenda<Contacto> contactos = new CircledDoubleLinkedList<>();
     private Map<String, Contacto> contactosPorTelefono = new HashMap<>();
     public ListAgenda<Contacto> getContactos() { return contactos; }
@@ -52,6 +53,5 @@ public class Agenda {
         indiceActual = (indiceActual - 1 + contactos.size()) % contactos.size();
         return getActual();
     }
-
 }
 

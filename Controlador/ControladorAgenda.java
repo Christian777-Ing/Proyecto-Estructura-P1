@@ -1,6 +1,7 @@
 package Controlador;
 import java.util.Scanner;
 
+import Modelo.Agenda;
 import Modelo.Contacto;
 import Modelo.Direccion;
 import Modelo.Empresa;
@@ -22,7 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ControladorAgenda {
-    private Map<String, Contacto> agenda = new HashMap<>();
+    private Agenda agenda;
+
+    public ControladorAgenda() {
+        this.agenda = new Agenda();
+    }
+
 
     public void crearContacto(Scanner sc) {
         System.out.println("\n--- Crear nuevo contacto ---");
@@ -126,38 +132,42 @@ public class ControladorAgenda {
                     fotos, fechasImportantes, contactosRelacionados, atributosGenerales);
         }
 
-        agenda.put(telefonoPrincipal, contacto);
+        agenda.agregarContacto(contacto);
         System.out.println("Contacto creado con teléfono principal: " + telefonoPrincipal);
     }
 
     public void mostrarContactos() {
-            if (agenda.isEmpty()) {
-                System.out.println("No hay contactos.");
-                return;
-            }
-            for (var entry : agenda.entrySet()) {
-                System.out.println("\nTeléfono principal: " + entry.getKey());
-                System.out.println(entry.getValue());
-            }
-        }
-
-    public void navegarContactos(Scanner sc) {
-        if (agenda.isEmpty()) {
+        if (agenda.getContactos().isEmpty()) {
             System.out.println("No hay contactos.");
             return;
         }
-        List<Contacto> lista = new ArrayList<>(agenda.values());
-        int index = 0;
-        String op;
-        do {
-            System.out.println("\nContacto (" + (index+1) + "/" + lista.size() + "):\n" + lista.get(index));
-            System.out.print("[s]iguiente, [a]nterior, [q]uit: ");
-            op = sc.nextLine();
-            if (op.equals("s")) index = (index + 1) % lista.size();
-            else if (op.equals("a")) index = (index - 1 + lista.size()) % lista.size();
-        } while (!op.equals("q"));
+        for (Contacto c : agenda.getContactos()) {
+            System.out.println("\n" + c);
+        }
     }
 
+    public void navegarContactos(Scanner sc) {
+        if (agenda.getContactos().isEmpty()) {
+            System.out.println("No hay contactos.");
+            return;
+        }
+
+        CircledDoubleLinkedList<Contacto>.CircularDoublyLinkedListIterator iter =
+            ((CircledDoubleLinkedList<Contacto>) agenda.getContactos()).new CircularDoublyLinkedListIterator();
+
+        String op;
+        do {
+            System.out.println("\nContacto actual:\n" + iter.currentData());
+            System.out.print("[s]iguiente, [a]nterior, [q]uit: ");
+            op = sc.nextLine();
+
+            if (op.equalsIgnoreCase("s")) {
+                iter.next();
+            } else if (op.equalsIgnoreCase("a")) {
+                iter.previous();
+            }
+        } while (!op.equalsIgnoreCase("q"));
+    }
 
     public void guardarAgenda(String archivo) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(archivo))) {
@@ -168,17 +178,12 @@ public class ControladorAgenda {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void cargarAgenda(String archivo) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(archivo))) {
-            agenda = (Map<String, Contacto>) in.readObject();
+            agenda = (Agenda) in.readObject();
             System.out.println("Agenda cargada correctamente.");
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("No se pudo cargar agenda: " + e.getMessage());
+            System.out.println("No se pudo cargar la agenda: " + e.getMessage());
         }
-    }
-
-    public Map<String, Contacto> getAgenda() {
-        return agenda;
     }
 }

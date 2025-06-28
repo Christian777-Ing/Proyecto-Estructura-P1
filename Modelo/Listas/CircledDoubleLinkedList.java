@@ -1,5 +1,6 @@
 package Modelo.Listas;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 
@@ -14,7 +15,7 @@ public class CircledDoubleLinkedList<E> implements ListAgenda<E> {
 
     // Clase NodoDobleCircular para representar cada nodo en la lista
 
-class NodoDobleCircular<E> {
+class NodoDobleCircular<E> implements Serializable{
     E dato;                        // Dato almacenado en el nodo
     NodoDobleCircular<E> siguiente; // Referencia al siguiente nodo
     NodoDobleCircular<E> anterior;  // Referencia al nodo anterior
@@ -235,6 +236,11 @@ class NodoDobleCircular<E> {
     public E previous() {
         if (current == null || current.anterior == null) throw new IllegalStateException("No previous element");
         current = current.anterior;
+        return current.dato;
+    }
+
+    public E currentData() {
+        if (current == null) throw new IllegalStateException("No current element");
         return current.dato;
     }
 

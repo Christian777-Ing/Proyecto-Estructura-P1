@@ -1,5 +1,8 @@
 package Modelo;
-public class Foto {
+
+import java.io.Serializable;
+
+public class Foto implements Serializable{
     private String descripcion; // Breve texto para identificar la imagen
     private String urlImagen;   // Ruta local o URL en la nube
 
