@@ -8,20 +8,30 @@ import Listas.ListAgenda;
 
 public abstract class Contacto {
 
-    private String nombre;
-    private ListAgenda<String> telefonos = new ArrayListAgenda<>();
-    private ListAgenda<String> correos = new ArrayListAgenda<>();
-    private ListAgenda<Direccion> direcciones = new ArrayListAgenda<>();
-    private ListAgenda<Foto> fotos = new CircledDoubleLinkedList<>();
-    private ListAgenda<FechaImportante> fechasImportantes = new ArrayListAgenda<>();
-    private ListAgenda<Contacto> contactosRelacionados = new CircledDoubleLinkedList<>();
+    String nombre;
+    ListAgenda<String> telefonos = new ArrayListAgenda<>();
+    ListAgenda<String> correos = new ArrayListAgenda<>();
+    ListAgenda<Direccion> direcciones = new ArrayListAgenda<>();
+    ListAgenda<Foto> fotos = new CircledDoubleLinkedList<>();
+    ListAgenda<FechaImportante> fechasImportantes = new ArrayListAgenda<>();
+    ListAgenda<Contacto> contactosRelacionados = new CircledDoubleLinkedList<>();
 
     // Atributos personalizados (ej. Instagram, Cargo, Departamento)
     protected Map<String, String> atributosGenerales = new HashMap<>();
 
-    // Constructor
-    public Contacto(String nombre) {
+
+
+    public Contacto(String nombre, ListAgenda<String> telefonos, ListAgenda<String> correos,
+            ListAgenda<Direccion> direcciones, ListAgenda<Foto> fotos, ListAgenda<FechaImportante> fechasImportantes,
+            ListAgenda<Contacto> contactosRelacionados, Map<String, String> atributosGenerales) {
         this.nombre = nombre;
+        this.telefonos = telefonos;
+        this.correos = correos;
+        this.direcciones = direcciones;
+        this.fotos = fotos;
+        this.fechasImportantes = fechasImportantes;
+        this.contactosRelacionados = contactosRelacionados;
+        this.atributosGenerales = atributosGenerales;
     }
 
     // Getters y Setters básicos

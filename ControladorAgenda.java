@@ -2,11 +2,15 @@ import java.util.Scanner;
 
 import Listas.ArrayListAgenda;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
 public class ControladorAgenda {
-    private ArrayListAgenda<Contacto> agenda;
+    private Map<String, Contacto> agenda;
 
     public ControladorAgenda() {
-        this.agenda = new ArrayListAgenda<>();
+        this.agenda = new HashMap<>();
     }
 
     public void mostrarContactos() {
@@ -16,9 +20,9 @@ public class ControladorAgenda {
         }
 
         System.out.println("\n--- Lista de Contactos ---");
-        for (int i = 0; i < agenda.size(); i++) {
-            Contacto c = agenda.get(i);
-            System.out.println((i + 1) + ". " + c);
+        for (Map.Entry<String, Contacto> entry : agenda.entrySet()) {
+            System.out.println("\nIdentificador (teléfono principal): " + entry.getKey());
+            System.out.println(entry.getValue());
         }
     }
 
@@ -45,7 +49,7 @@ public class ControladorAgenda {
         }
 
         // --- Teléfonos ---
-        agregarTelefonos(sc, contacto);
+        String telefonoPrincipal = agregarTelefonos(sc, contacto);
 
         // --- Direcciones ---
         agregarDirecciones(sc, contacto);
@@ -53,17 +57,29 @@ public class ControladorAgenda {
         // --- Fotos ---
         agregarFotos(sc, contacto);
 
-        agenda.add(contacto);
-        System.out.println("Contacto agregado correctamente.");
+        // Añadir contacto al mapa usando el primer teléfono como clave
+        if (telefonoPrincipal != null) {
+            agenda.put(telefonoPrincipal, contacto);
+            System.out.println("Contacto agregado correctamente con identificador (teléfono principal): " + telefonoPrincipal);
+        } else {
+            System.out.println("No se agregó contacto porque no ingresó al menos un teléfono.");
+        }
     }
 
-    private void agregarTelefonos(Scanner sc, Contacto contacto) {
+    private String agregarTelefonos(Scanner sc, Contacto contacto) {
+        String telefonoPrincipal = null;
+
         while (true) {
-            System.out.print("Ingrese un teléfono (o deje vacío para terminar): ");
+            System.out.print("Ingrese un teléfono en el formato tipo:numero (o vacío para terminar): ");
             String tel = sc.nextLine();
             if (tel.isEmpty()) break;
+
             contacto.getTelefonos().add(tel);
+            if (telefonoPrincipal == null) {
+                telefonoPrincipal = tel;
+            }
         }
+        return telefonoPrincipal;
     }
 
     private void agregarDirecciones(Scanner sc, Contacto contacto) {
