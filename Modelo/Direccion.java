@@ -1,3 +1,4 @@
+package Modelo;
 import java.io.Serializable;
 
 public class Direccion implements Serializable{

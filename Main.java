@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import Controlador.ControladorAgenda;
+
 public class Main {
     public static void main(String[] args) {
         ControladorAgenda controlador = new ControladorAgenda();

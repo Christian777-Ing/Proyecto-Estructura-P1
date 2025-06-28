@@ -1,8 +1,15 @@
+package Controlador;
 import java.util.Scanner;
 
-import Listas.ArrayListAgenda;
-import Listas.CircledDoubleLinkedList;
-import Listas.ListAgenda;
+import Modelo.Contacto;
+import Modelo.Direccion;
+import Modelo.Empresa;
+import Modelo.FechaImportante;
+import Modelo.Foto;
+import Modelo.Persona;
+import Modelo.Listas.ArrayListAgenda;
+import Modelo.Listas.CircledDoubleLinkedList;
+import Modelo.Listas.ListAgenda;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -99,14 +106,14 @@ public class ControladorAgenda {
         }
 
         // Atributos generales
-        System.out.print("¿Desea añadir un atributo adicional? (s/n): ");
+        System.out.print("¿Desea añadir una red social ? (s/n): ");
         while (sc.nextLine().equalsIgnoreCase("s")) {
-            System.out.print("Nombre del atributo: ");
+            System.out.print("Nombre de la red social: ");
             String attrName = sc.nextLine();
-            System.out.print("Valor del atributo: ");
+            System.out.print("Ingrese usuario de red social: ");
             String attrValue = sc.nextLine();
             atributosGenerales.put(attrName, attrValue);
-            System.out.print("¿Desea añadir otro atributo? (s/n): ");
+            System.out.print("¿Desea añadir otra red social? (s/n): ");
         }
 
         // Crear contacto final

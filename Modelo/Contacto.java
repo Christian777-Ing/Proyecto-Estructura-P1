@@ -1,11 +1,12 @@
+package Modelo;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import Listas.ArrayListAgenda;
-import Listas.CircledDoubleLinkedList;
-import Listas.ListAgenda;
+import Modelo.Listas.ArrayListAgenda;
+import Modelo.Listas.CircledDoubleLinkedList;
+import Modelo.Listas.ListAgenda;
 
 public abstract class Contacto implements Serializable{
     private static final long serialVersionUID = 1L;

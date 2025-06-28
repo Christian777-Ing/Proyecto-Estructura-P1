@@ -1,6 +1,7 @@
+package Modelo;
 import java.util.Map;
 
-import Listas.ListAgenda;
+import Modelo.Listas.ListAgenda;
 
 public class Persona extends Contacto {
     private static final long serialVersionUID = 1L;

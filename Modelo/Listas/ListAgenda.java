@@ -1,4 +1,4 @@
-package Listas;
+package Modelo.Listas;
 
 import java.io.Serializable;
 

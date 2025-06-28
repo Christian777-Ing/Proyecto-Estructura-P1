@@ -1,9 +1,9 @@
+package Modelo;
 import java.util.HashMap;
 import java.util.Map;
 
-
-import Listas.CircledDoubleLinkedList;
-import Listas.ListAgenda;
+import Modelo.Listas.CircledDoubleLinkedList;
+import Modelo.Listas.ListAgenda;
 
 public class Agenda {
     private ListAgenda<Contacto> contactos = new CircledDoubleLinkedList<>();

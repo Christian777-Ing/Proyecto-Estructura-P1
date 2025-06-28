@@ -1,3 +1,4 @@
+package Modelo;
 public class Foto {
     private String descripcion; // Breve texto para identificar la imagen
     private String urlImagen;   // Ruta local o URL en la nube
