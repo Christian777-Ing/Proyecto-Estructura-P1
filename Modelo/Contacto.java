@@ -11,7 +11,7 @@ import Modelo.Listas.ListAgenda;
 public abstract class Contacto implements Serializable{
     private static final long serialVersionUID = 1L;
     String nombre;
-    ListAgenda<String> telefonos = new ArrayListAgenda<>();
+    ListAgenda<Telefono> telefonos = new ArrayListAgenda<>();
     ListAgenda<String> correos = new ArrayListAgenda<>();
     ListAgenda<Direccion> direcciones = new ArrayListAgenda<>();
     ListAgenda<Foto> fotos = new CircledDoubleLinkedList<Foto>();
@@ -23,7 +23,7 @@ public abstract class Contacto implements Serializable{
 
 
 
-    public Contacto(String nombre, ListAgenda<String> telefonos, ListAgenda<String> correos,
+    public Contacto(String nombre, ListAgenda<Telefono> telefonos, ListAgenda<String> correos,
             ListAgenda<Direccion> direcciones, ListAgenda<Foto> fotos, ListAgenda<FechaImportante> fechasImportantes,
             ListAgenda<Contacto> contactosRelacionados, Map<String, String> atributosGenerales) {
         this.nombre = nombre;
@@ -45,7 +45,7 @@ public abstract class Contacto implements Serializable{
         this.nombre = nombre;
     }
 
-    public ListAgenda<String> getTelefonos() {
+    public ListAgenda<Telefono> getTelefonos() {
         return telefonos;
     }
 
@@ -93,8 +93,10 @@ public abstract class Contacto implements Serializable{
     }
 
     public String getTelefonoPrincipal() {
-        return telefonos.isEmpty() ? null : telefonos.getFirst();
+        if (telefonos != null && !telefonos.isEmpty()) {
+            return telefonos.get(0).getNumero(); // El primer teléfono ingresado es el principal
+        }
+        return "N/A"; // O lanza una excepción si un contacto debe tener siempre un teléfono principal
     }
-
     
 }

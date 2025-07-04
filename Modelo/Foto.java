@@ -32,7 +32,4 @@ public class Foto implements Serializable{
         return descripcion + " (" + urlImagen + ")";
     }
 
-    public void jahsh(){
-        
-    }
 }

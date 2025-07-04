@@ -1,4 +1,5 @@
 package Controlador;
+
 import java.util.Scanner;
 
 import Comparadores.FiltrosAgenda;
@@ -9,6 +10,7 @@ import Modelo.Empresa;
 import Modelo.FechaImportante;
 import Modelo.Foto;
 import Modelo.Persona;
+import Modelo.Telefono;
 import Modelo.Listas.ArrayListAgenda;
 import Modelo.Listas.CircledDoubleLinkedList;
 import Modelo.Listas.ListAgenda;
@@ -29,7 +31,6 @@ public class ControladorAgenda {
         this.agenda = new Agenda();
     }
 
-
     public void crearContacto(Scanner sc) {
         System.out.println("\n--- Crear nuevo contacto ---");
         System.out.print("Tipo de contacto (1=Persona, 2=Empresa): ");
@@ -47,7 +48,7 @@ public class ControladorAgenda {
             apellidoORazonSocial = sc.nextLine();
         }
 
-        ListAgenda<String> telefonos = new ArrayListAgenda<>();
+        ListAgenda<Telefono> telefonos = new ArrayListAgenda<>();
         ListAgenda<String> correos = new ArrayListAgenda<>();
         ListAgenda<Direccion> direcciones = new ArrayListAgenda<>();
         ListAgenda<Foto> fotos = new CircledDoubleLinkedList<>();
@@ -55,24 +56,32 @@ public class ControladorAgenda {
         ListAgenda<Contacto> contactosRelacionados = new CircledDoubleLinkedList<>();
         Map<String, String> atributosGenerales = new HashMap<>();
 
-        // Teléfonos: al menos uno
-        String telefonoPrincipal = null;
-        while (telefonoPrincipal == null) {
-            System.out.print("Ingrese teléfono en formato tipo:numero (obligatorio): ");
-            String tel = sc.nextLine();
-            if (!tel.isEmpty()) {
-                telefonos.add(tel);
-                telefonoPrincipal = tel;
+        // Teléfonos: al menos uno (el primero será el principal)
+        Telefono telefonoPrincipalObj = null;
+        while (telefonoPrincipalObj == null) {
+            System.out.print("Ingrese el TIPO de teléfono (ej: Principal, Móvil, Trabajo) (obligatorio): ");
+            String tipoTel = sc.nextLine();
+            System.out.print("Ingrese el NÚMERO de teléfono (obligatorio): ");
+            String numTel = sc.nextLine();
+            if (!tipoTel.isEmpty() && !numTel.isEmpty()) {
+                telefonoPrincipalObj = new Telefono(tipoTel, numTel);
+                telefonos.add(telefonoPrincipalObj);
             } else {
-                System.out.println("Debe ingresar al menos un teléfono.");
+                System.out.println("Debe ingresar al menos un teléfono con tipo y número.");
             }
         }
 
         System.out.print("¿Desea añadir otro teléfono? (s/n): ");
         while (sc.nextLine().equalsIgnoreCase("s")) {
-            System.out.print("Teléfono (tipo:numero): ");
-            String tel = sc.nextLine();
-            if (!tel.isEmpty()) telefonos.add(tel);
+            System.out.print("Tipo de teléfono (ej: Móvil, Casa): ");
+            String tipoTel = sc.nextLine();
+            System.out.print("Número de teléfono: ");
+            String numTel = sc.nextLine();
+            if (!tipoTel.isEmpty() && !numTel.isEmpty()) {
+                telefonos.add(new Telefono(tipoTel, numTel));
+            } else {
+                System.out.println("Tipo o número de teléfono no pueden estar vacíos.");
+            }
             System.out.print("¿Desea añadir otro teléfono? (s/n): ");
         }
 
@@ -130,14 +139,14 @@ public class ControladorAgenda {
         if (!agenda.getContactos().isEmpty()) {
             System.out.print("¿Desea añadir un contacto relacionado? (s/n): ");
             while (sc.nextLine().equalsIgnoreCase("s")) {
-                System.out.print("Ingrese el teléfono del contacto que desea relacionar: ");
+                System.out.print("Ingrese el teléfono PRINCIPAL del contacto que desea relacionar: ");
                 String telRelacion = sc.nextLine();
                 Contacto cRelacion = agenda.buscarPorTelefono(telRelacion);
                 if (cRelacion != null) {
                     contactosRelacionados.add(cRelacion);
                     System.out.println("Contacto relacionado agregado: " + cRelacion.getNombre());
                 } else {
-                    System.out.println("No se encontró un contacto con ese teléfono.");
+                    System.out.println("No se encontró un contacto con ese teléfono principal.");
                 }
                 System.out.print("¿Desea añadir otro contacto relacionado? (s/n): ");
             }
@@ -165,16 +174,32 @@ public class ControladorAgenda {
         }
 
         agenda.agregarContacto(contacto);
-        System.out.println("Contacto creado con teléfono principal: " + telefonoPrincipal);
+        System.out.println("Contacto creado con teléfono principal: " + telefonoPrincipalObj.toString());
     }
 
     public void mostrarContactos() {
         if (agenda.getContactos().isEmpty()) {
-            System.out.println("No hay contactos.");
+            System.out.println("No hay contactos en la agenda.");
             return;
         }
-        for (Contacto c : agenda.getContactos()) {
-            System.out.println("\n" + c);
+        System.out.println("\n--- Resumen de Todos los Contactos ---");
+        for (int i = 0; i < agenda.getContactos().size(); i++) {
+            Contacto c = agenda.getContactos().get(i);
+            String tipoContacto = (c instanceof Persona) ? "Persona" : "Empresa";
+            String nombreCompletoORazonSocial = c.getNombre(); // Nombre base
+
+            // Añadir apellido o razón social si aplica
+            if (c instanceof Persona) {
+                nombreCompletoORazonSocial += " " + ((Persona) c).getApellido();
+            } else if (c instanceof Empresa) {
+                // Si getNombreLegal() es el método para la razón social en Empresa
+                nombreCompletoORazonSocial += " (" + ((Empresa) c).getNombreLegal() + ")";
+            }
+
+            // Asegúrate de que getTelefonoPrincipal() en Contacto devuelva solo el número como String
+            String telefonoPrincipal = c.getTelefonoPrincipal();
+
+            System.out.println("- " + nombreCompletoORazonSocial + " [" + tipoContacto + "] - Teléfono Principal: " + telefonoPrincipal);
         }
     }
 
@@ -184,12 +209,53 @@ public class ControladorAgenda {
             return;
         }
 
+        CircledDoubleLinkedList<Contacto> circularList = null;
+        if (agenda.getContactos() instanceof CircledDoubleLinkedList) {
+            circularList = (CircledDoubleLinkedList<Contacto>) agenda.getContactos();
+        } else {
+            System.out.println("La navegación circular solo funciona con CircledDoubleLinkedList.");
+            return;
+        }
+
         CircledDoubleLinkedList<Contacto>.CircularDoublyLinkedListIterator iter =
-            ((CircledDoubleLinkedList<Contacto>) agenda.getContactos()).new CircularDoublyLinkedListIterator();
+                circularList.new CircularDoublyLinkedListIterator();
 
         String op;
         do {
-            System.out.println("\nContacto actual:\n" + iter.currentData());
+            Contacto currentContact = iter.currentData();
+            if (currentContact != null) {
+                System.out.println("\n--- Contacto Actual ---");
+                System.out.println(currentContact);
+
+                // Mostrar contactos relacionados si los hay
+                if (currentContact.getContactosRelacionados() != null && !currentContact.getContactosRelacionados().isEmpty()) {
+                    System.out.println("\n--- Contactos Relacionados ---");
+                    for (int i = 0; i < currentContact.getContactosRelacionados().size(); i++) {
+                        Contacto related = currentContact.getContactosRelacionados().get(i);
+                        System.out.println((i + 1) + ". " + related.getNombre() + " (" + related.getTelefonoPrincipal() + ")");
+                    }
+                    System.out.print("Ingrese el número del contacto relacionado para ver detalles, o 0 para ignorar: ");
+                    try {
+                        int choice = Integer.parseInt(sc.nextLine());
+                        if (choice > 0 && choice <= currentContact.getContactosRelacionados().size()) {
+                            Contacto selectedRelated = currentContact.getContactosRelacionados().get(choice - 1);
+                            System.out.println("\n--- Detalles del Contacto Relacionado: " + selectedRelated.getNombre() + " ---");
+                            System.out.println(selectedRelated.toString());
+                            System.out.println("\nPresione Enter para continuar...");
+                            sc.nextLine();
+                        } else if (choice != 0) {
+                            System.out.println("Opción de contacto relacionado inválida.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Entrada inválida. Por favor, ingrese un número.");
+                    }
+                }
+
+            } else {
+                System.out.println("\nNo hay contactos para navegar.");
+                break;
+            }
+
             System.out.print("[s]iguiente, [a]nterior, [q]uit: ");
             op = sc.nextLine();
 
@@ -202,22 +268,22 @@ public class ControladorAgenda {
     }
 
     public void eliminarContacto(Scanner sc) {
-        System.out.print("Ingrese el teléfono principal del contacto a eliminar: ");
+        System.out.print("Ingrese el teléfono principal (solo el número) del contacto a eliminar: ");
         String telefono = sc.nextLine();
         if (agenda.eliminarPorTelefono(telefono)) {
             System.out.println("Contacto eliminado correctamente.");
         } else {
-            System.out.println("No se encontró un contacto con ese teléfono.");
+            System.out.println("No se encontró un contacto con ese teléfono principal.");
         }
     }
 
     public void editarContacto(Scanner sc) {
-        System.out.print("Ingrese el teléfono principal del contacto a editar: ");
-        String telefono = sc.nextLine();
-        Contacto contacto = agenda.buscarPorTelefono(telefono);
+        System.out.print("Ingrese el teléfono principal (solo el número) del contacto a editar: ");
+        String telefonoBusqueda = sc.nextLine();
+        Contacto contacto = agenda.buscarPorTelefono(telefonoBusqueda);
 
         if (contacto == null) {
-            System.out.println("No se encontró un contacto con ese teléfono.");
+            System.out.println("No se encontró un contacto con ese teléfono principal.");
             return;
         }
 
@@ -247,27 +313,40 @@ public class ControladorAgenda {
             }
         }
 
-        // Añadir nuevos teléfonos
+        // Añadir nuevos teléfonos (sin 'break')
         System.out.print("¿Desea añadir otro teléfono? (s/n): ");
-        while (sc.nextLine().equalsIgnoreCase("s")) {
-            System.out.print("Teléfono (tipo:numero): ");
-            String tel = sc.nextLine();
-            if (!tel.isEmpty()) contacto.getTelefonos().add(tel);
+        String respuestaTel = sc.nextLine();
+        while (respuestaTel.equalsIgnoreCase("s")) {
+            System.out.print("Tipo de teléfono (ej: Móvil, Casa): ");
+            String tipoTel = sc.nextLine();
+            System.out.print("Número de teléfono: ");
+            String numTel = sc.nextLine();
+            if (!tipoTel.isEmpty() && !numTel.isEmpty()) {
+                contacto.getTelefonos().add(new Telefono(tipoTel, numTel));
+            } else {
+                System.out.println("Tipo o número de teléfono no pueden estar vacíos.");
+            }
             System.out.print("¿Desea añadir otro teléfono? (s/n): ");
+            respuestaTel = sc.nextLine(); // Leer la respuesta para la próxima iteración
         }
 
-        // Añadir nuevos correos
+        // Añadir nuevos correos (sin 'break')
         System.out.print("¿Desea añadir un correo? (s/n): ");
-        while (sc.nextLine().equalsIgnoreCase("s")) {
+        String respuestaCorreo = sc.nextLine();
+        while (respuestaCorreo.equalsIgnoreCase("s")) {
             System.out.print("Correo: ");
             String correo = sc.nextLine();
             if (!correo.isEmpty()) contacto.getCorreos().add(correo);
             System.out.print("¿Desea añadir otro correo? (s/n): ");
+            respuestaCorreo = sc.nextLine();
         }
 
-        // Añadir nuevas direcciones
+        // Añadir nuevas direcciones (sin 'break')
         System.out.print("¿Desea añadir una dirección? (s/n): ");
-        while (sc.nextLine().equalsIgnoreCase("s")) {
+        String respuestaDir = sc.nextLine();
+        while (respuestaDir.equalsIgnoreCase("s")) {
+            System.out.print("Tipo de dirección (ej. Domicilio): ");
+            String tipoDir = sc.nextLine();
             System.out.print("Calle principal: ");
             String cp = sc.nextLine();
             System.out.print("Calle secundaria: ");
@@ -276,24 +355,26 @@ public class ControladorAgenda {
             String ciudad = sc.nextLine();
             System.out.print("País: ");
             String pais = sc.nextLine();
-            contacto.getDirecciones().add(new Direccion("Domicilio", cp, cs, ciudad, pais));
+            contacto.getDirecciones().add(new Direccion(tipoDir, cp, cs, ciudad, pais));
             System.out.print("¿Desea añadir otra dirección? (s/n): ");
+            respuestaDir = sc.nextLine();
         }
 
-        // Añadir nuevas redes sociales
+        // Añadir nuevas redes sociales (atributos generales) (sin 'break')
         System.out.print("¿Desea añadir una red social? (s/n): ");
-        while (sc.nextLine().equalsIgnoreCase("s")) {
+        String respuestaRed = sc.nextLine();
+        while (respuestaRed.equalsIgnoreCase("s")) {
             System.out.print("Nombre de la red social: ");
             String red = sc.nextLine();
             System.out.print("Usuario: ");
             String user = sc.nextLine();
             contacto.getAtributosGenerales().put(red, user);
             System.out.print("¿Desea añadir otra red social? (s/n): ");
+            respuestaRed = sc.nextLine();
         }
 
         System.out.println("Contacto editado exitosamente.");
     }
-
 
     public void guardarAgenda(String archivo) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(archivo))) {
@@ -312,7 +393,6 @@ public class ControladorAgenda {
             System.out.println("No se pudo cargar la agenda: " + e.getMessage());
         }
     }
-
 
     public void menuFiltrarContactos(Scanner sc) {
         if (agenda.getContactos().isEmpty()) {
@@ -333,7 +413,7 @@ public class ControladorAgenda {
 
             try {
                 int opcion = Integer.parseInt(sc.nextLine());
-                contactosFiltrados = null; // Reset para cada nueva búsqueda
+                contactosFiltrados = null;
 
                 switch (opcion) {
                     case 1:
@@ -358,13 +438,12 @@ public class ControladorAgenda {
                         System.out.println("Opción inválida.");
                 }
 
-                // Mostrar resultados del filtro (si se aplicó un filtro de lista)
                 if (contactosFiltrados != null && !contactosFiltrados.isEmpty()) {
                     System.out.println("\n--- Contactos Filtrados (" + contactosFiltrados.size() + " encontrados) ---");
                     for (int i = 0; i < contactosFiltrados.size(); i++) {
                         System.out.println("\n" + contactosFiltrados.get(i).toString());
                     }
-                } else if (contactosFiltrados != null) { // Si contactosFiltrados es no nulo pero vacío
+                } else if (contactosFiltrados != null) {
                     System.out.println("No se encontraron contactos que cumplan el criterio.");
                 }
 
