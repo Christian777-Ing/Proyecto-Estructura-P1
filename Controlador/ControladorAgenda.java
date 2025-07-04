@@ -1,6 +1,7 @@
 package Controlador;
 import java.util.Scanner;
 
+import Comparadores.FiltrosAgenda;
 import Modelo.Agenda;
 import Modelo.Contacto;
 import Modelo.Direccion;
@@ -309,6 +310,69 @@ public class ControladorAgenda {
             System.out.println("Agenda cargada correctamente.");
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("No se pudo cargar la agenda: " + e.getMessage());
+        }
+    }
+
+
+    public void menuFiltrarContactos(Scanner sc) {
+        if (agenda.getContactos().isEmpty()) {
+            System.out.println("No hay contactos para filtrar.");
+            return;
+        }
+
+        ListAgenda<Contacto> contactosFiltrados = null;
+        boolean salirFiltro = false;
+
+        while (!salirFiltro) {
+            System.out.println("\n--- Filtrar Contactos ---");
+            System.out.println("1. Filtrar por País de Residencia");
+            System.out.println("2. Filtrar por Tipo de Contacto (Persona/Empresa)");
+            System.out.println("3. Filtrar por Inicial de Apellido");
+            System.out.println("0. Volver al menú principal");
+            System.out.print("Opción de filtro: ");
+
+            try {
+                int opcion = Integer.parseInt(sc.nextLine());
+                contactosFiltrados = null; // Reset para cada nueva búsqueda
+
+                switch (opcion) {
+                    case 1:
+                        System.out.print("Ingrese el país a buscar: ");
+                        String pais = sc.nextLine();
+                        contactosFiltrados = FiltrosAgenda.filtrarPorPais(agenda.getContactos(), pais);
+                        break;
+                    case 2:
+                        System.out.print("Ingrese el tipo (Persona/Empresa): ");
+                        String tipo = sc.nextLine();
+                        contactosFiltrados = FiltrosAgenda.filtrarPorTipo(agenda.getContactos(), tipo);
+                        break;
+                    case 3:
+                        System.out.print("Ingrese la inicial del apellido: ");
+                        char inicial = sc.nextLine().toUpperCase().charAt(0);
+                        contactosFiltrados = FiltrosAgenda.filtrarPorApellidoYPrimerNombre(agenda.getContactos(), inicial);
+                        break;
+                    case 0:
+                        salirFiltro = true;
+                        break;
+                    default:
+                        System.out.println("Opción inválida.");
+                }
+
+                // Mostrar resultados del filtro (si se aplicó un filtro de lista)
+                if (contactosFiltrados != null && !contactosFiltrados.isEmpty()) {
+                    System.out.println("\n--- Contactos Filtrados (" + contactosFiltrados.size() + " encontrados) ---");
+                    for (int i = 0; i < contactosFiltrados.size(); i++) {
+                        System.out.println("\n" + contactosFiltrados.get(i).toString());
+                    }
+                } else if (contactosFiltrados != null) { // Si contactosFiltrados es no nulo pero vacío
+                    System.out.println("No se encontraron contactos que cumplan el criterio.");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, ingrese un número válido para la opción.");
+            } catch (Exception e) {
+                System.out.println("Ocurrió un error: " + e.getMessage());
+            }
         }
     }
 }
