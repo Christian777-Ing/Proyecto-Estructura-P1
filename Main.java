@@ -15,12 +15,8 @@ public class Main {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } else {
                 // Para Linux/macOS: Usar secuencias de escape ANSI.
-                // Ten en cuenta que esto puede no funcionar en todos los IDEs
-                // que no emulan una terminal real (ej. algunos entornos de Eclipse, IntelliJ).
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
-                // Alternativa para Linux/macOS (a veces funciona mejor, pero también con limitaciones en IDEs):
-                // new ProcessBuilder("clear").inheritIO().start().waitFor();
             }
         } catch (IOException | InterruptedException e) {
             // Si falla la limpieza (ej. en ciertos IDEs o entornos restringidos),

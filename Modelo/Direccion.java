@@ -19,6 +19,7 @@ public class Direccion implements Serializable{
         this.linkMapa = generarLinkGoogleMaps();
     }
 
+    // Genera link en google Maps de la Ubicación
     private String generarLinkGoogleMaps() {
         String direccionCompleta = callePrincipal + " y " + calleSecundaria + ", " + ciudad + ", " + pais;
         String direccionCodificada = direccionCompleta.trim().replace(" ", "+");

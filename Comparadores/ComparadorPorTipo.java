@@ -6,7 +6,7 @@ import Modelo.Contacto;
 import Modelo.Empresa;
 import Modelo.Persona;
 
-public class ComparadorPorTipo implements Comparator<Contacto> {
+public class ComparadorPorTipo implements Comparator<Contacto> { // Comparador que servirá para filtrar por Tipo
 
     private String tipoAFiltrar; // "Persona" o "Empresa"
 
@@ -16,7 +16,6 @@ public class ComparadorPorTipo implements Comparator<Contacto> {
 
     @Override
     public int compare(Contacto c1, Contacto c2) {
-        // El 'c2' sigue siendo irrelevante para esta lógica de filtro.
         boolean cumpleTipo = false;
 
         if ("Persona".equalsIgnoreCase(tipoAFiltrar) && c1 instanceof Persona) {

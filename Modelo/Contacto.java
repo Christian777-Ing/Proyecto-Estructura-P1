@@ -96,7 +96,7 @@ public abstract class Contacto implements Serializable{
         if (telefonos != null && !telefonos.isEmpty()) {
             return telefonos.get(0).getNumero(); // El primer teléfono ingresado es el principal
         }
-        return "N/A"; // O lanza una excepción si un contacto debe tener siempre un teléfono principal
+        return "Ningun telefono asociado"; // O lanza una excepción si un contacto debe tener siempre un teléfono principal
     }
     
 }

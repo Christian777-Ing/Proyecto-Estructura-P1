@@ -3,7 +3,7 @@ import java.util.Comparator;
 import Modelo.Contacto;
 import Modelo.Persona;
 
-public class ComparadorPorApellidoYNombre implements Comparator<Contacto> {
+public class ComparadorPorApellidoYNombre implements Comparator<Contacto> { // Comparador para filtrar por Apellido
     private char inicialApellidoAFiltrar;
 
     public ComparadorPorApellidoYNombre(char inicialApellido) {

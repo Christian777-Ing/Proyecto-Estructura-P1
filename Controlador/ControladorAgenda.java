@@ -31,6 +31,7 @@ public class ControladorAgenda {
         this.agenda = new Agenda();
     }
 
+    // Se pide al usurio datos para crear contactos.
     public void crearContacto(Scanner sc) {
         System.out.println("\n--- Crear nuevo contacto ---");
         System.out.print("Tipo de contacto (1=Persona, 2=Empresa): ");
@@ -177,6 +178,7 @@ public class ControladorAgenda {
         System.out.println("Contacto creado con teléfono principal: " + telefonoPrincipalObj.toString());
     }
 
+    // Muestra todos los contactos que existen en la agenda de forma resumida.
     public void mostrarContactos() {
         if (agenda.getContactos().isEmpty()) {
             System.out.println("No hay contactos en la agenda.");
@@ -310,6 +312,7 @@ public class ControladorAgenda {
         }
     }
 
+    // Método destinado para editar y modificar los datos del contacto deseado.
     public void editarContacto(Scanner sc) {
         System.out.print("Ingrese el teléfono principal (solo el número) del contacto a editar: ");
         String telefonoBusqueda = sc.nextLine();
@@ -346,7 +349,7 @@ public class ControladorAgenda {
             }
         }
 
-        // Añadir nuevos teléfonos (sin 'break')
+        // Añadir nuevos teléfonos
         System.out.print("¿Desea añadir otro teléfono? (s/n): ");
         String respuestaTel = sc.nextLine();
         while (respuestaTel.equalsIgnoreCase("s")) {
@@ -363,7 +366,7 @@ public class ControladorAgenda {
             respuestaTel = sc.nextLine(); // Leer la respuesta para la próxima iteración
         }
 
-        // Añadir nuevos correos (sin 'break')
+        // Añadir nuevos correos 
         System.out.print("¿Desea añadir un correo? (s/n): ");
         String respuestaCorreo = sc.nextLine();
         while (respuestaCorreo.equalsIgnoreCase("s")) {
@@ -374,7 +377,7 @@ public class ControladorAgenda {
             respuestaCorreo = sc.nextLine();
         }
 
-        // Añadir nuevas direcciones (sin 'break')
+        // Añadir nuevas direcciones 
         System.out.print("¿Desea añadir una dirección? (s/n): ");
         String respuestaDir = sc.nextLine();
         while (respuestaDir.equalsIgnoreCase("s")) {
@@ -393,7 +396,7 @@ public class ControladorAgenda {
             respuestaDir = sc.nextLine();
         }
 
-        // Añadir nuevas redes sociales (atributos generales) (sin 'break')
+        // Añadir nuevas redes sociales (atributos generales)
         System.out.print("¿Desea añadir una red social? (s/n): ");
         String respuestaRed = sc.nextLine();
         while (respuestaRed.equalsIgnoreCase("s")) {
@@ -409,6 +412,8 @@ public class ControladorAgenda {
         System.out.println("Contacto editado exitosamente.");
     }
 
+    // Guarda todos los cambios hechos durante la intercción con la Agenda en el archivo.
+
     public void guardarAgenda(String archivo) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(archivo))) {
             out.writeObject(agenda);
@@ -418,6 +423,7 @@ public class ControladorAgenda {
         }
     }
 
+    //Carga los contactos guardados durante la última interacción.
     public void cargarAgenda(String archivo) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(archivo))) {
             agenda = (Agenda) in.readObject();
@@ -427,6 +433,7 @@ public class ControladorAgenda {
         }
     }
 
+    // Menú que llamana a los filtros de contactos para su visualización
     public void menuFiltrarContactos(Scanner sc) {
         if (agenda.getContactos().isEmpty()) {
             System.out.println("No hay contactos para filtrar.");
