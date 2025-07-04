@@ -17,9 +17,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ControladorAgenda {
@@ -111,6 +110,38 @@ public class ControladorAgenda {
             System.out.print("¿Desea añadir otra foto? (s/n): ");
         }
 
+        // Fecha Importante
+        System.out.print("¿Desea agregar una fecha importante? (s/n): ");
+        while (sc.nextLine().equalsIgnoreCase("s")) {
+            System.out.print("Descripción (ej: Cumpleaños, Pago, etc.): ");
+            String desc = sc.nextLine();
+
+            System.out.print("Ingrese la fecha (yyyy-mm-dd): ");
+            String fechaStr = sc.nextLine();
+            LocalDate fecha = LocalDate.parse(fechaStr);
+
+            fechasImportantes.add(new FechaImportante(fecha, desc));
+
+            System.out.print("¿Desea añadir otra fecha importante? (s/n): ");
+        }
+
+        // Contactos relacionados
+        if (!agenda.getContactos().isEmpty()) {
+            System.out.print("¿Desea añadir un contacto relacionado? (s/n): ");
+            while (sc.nextLine().equalsIgnoreCase("s")) {
+                System.out.print("Ingrese el teléfono del contacto que desea relacionar: ");
+                String telRelacion = sc.nextLine();
+                Contacto cRelacion = agenda.buscarPorTelefono(telRelacion);
+                if (cRelacion != null) {
+                    contactosRelacionados.add(cRelacion);
+                    System.out.println("Contacto relacionado agregado: " + cRelacion.getNombre());
+                } else {
+                    System.out.println("No se encontró un contacto con ese teléfono.");
+                }
+                System.out.print("¿Desea añadir otro contacto relacionado? (s/n): ");
+            }
+        }
+
         // Atributos generales
         System.out.print("¿Desea añadir una red social ? (s/n): ");
         while (sc.nextLine().equalsIgnoreCase("s")) {
@@ -168,6 +199,100 @@ public class ControladorAgenda {
             }
         } while (!op.equalsIgnoreCase("q"));
     }
+
+    public void eliminarContacto(Scanner sc) {
+        System.out.print("Ingrese el teléfono principal del contacto a eliminar: ");
+        String telefono = sc.nextLine();
+        if (agenda.eliminarPorTelefono(telefono)) {
+            System.out.println("Contacto eliminado correctamente.");
+        } else {
+            System.out.println("No se encontró un contacto con ese teléfono.");
+        }
+    }
+
+    public void editarContacto(Scanner sc) {
+        System.out.print("Ingrese el teléfono principal del contacto a editar: ");
+        String telefono = sc.nextLine();
+        Contacto contacto = agenda.buscarPorTelefono(telefono);
+
+        if (contacto == null) {
+            System.out.println("No se encontró un contacto con ese teléfono.");
+            return;
+        }
+
+        System.out.println("Editando contacto: " + contacto.getNombre());
+
+        // Cambiar nombre
+        System.out.print("Nuevo nombre (enter para mantener '" + contacto.getNombre() + "'): ");
+        String nuevoNombre = sc.nextLine();
+        if (!nuevoNombre.isEmpty()) {
+            contacto.setNombre(nuevoNombre);
+        }
+
+        // Cambiar apellido o razón social según tipo
+        if (contacto instanceof Persona) {
+            Persona p = (Persona) contacto;
+            System.out.print("Nuevo apellido (enter para mantener '" + p.getApellido() + "'): ");
+            String nuevoApellido = sc.nextLine();
+            if (!nuevoApellido.isEmpty()) {
+                p.setApellido(nuevoApellido);
+            }
+        } else if (contacto instanceof Empresa) {
+            Empresa e = (Empresa) contacto;
+            System.out.print("Nueva razón social/sector (enter para mantener '" + e.getNombreLegal() + "'): ");
+            String nuevaRazon = sc.nextLine();
+            if (!nuevaRazon.isEmpty()) {
+                e.setNombreLegal(nuevaRazon);
+            }
+        }
+
+        // Añadir nuevos teléfonos
+        System.out.print("¿Desea añadir otro teléfono? (s/n): ");
+        while (sc.nextLine().equalsIgnoreCase("s")) {
+            System.out.print("Teléfono (tipo:numero): ");
+            String tel = sc.nextLine();
+            if (!tel.isEmpty()) contacto.getTelefonos().add(tel);
+            System.out.print("¿Desea añadir otro teléfono? (s/n): ");
+        }
+
+        // Añadir nuevos correos
+        System.out.print("¿Desea añadir un correo? (s/n): ");
+        while (sc.nextLine().equalsIgnoreCase("s")) {
+            System.out.print("Correo: ");
+            String correo = sc.nextLine();
+            if (!correo.isEmpty()) contacto.getCorreos().add(correo);
+            System.out.print("¿Desea añadir otro correo? (s/n): ");
+        }
+
+        // Añadir nuevas direcciones
+        System.out.print("¿Desea añadir una dirección? (s/n): ");
+        while (sc.nextLine().equalsIgnoreCase("s")) {
+            System.out.print("Calle principal: ");
+            String cp = sc.nextLine();
+            System.out.print("Calle secundaria: ");
+            String cs = sc.nextLine();
+            System.out.print("Ciudad: ");
+            String ciudad = sc.nextLine();
+            System.out.print("País: ");
+            String pais = sc.nextLine();
+            contacto.getDirecciones().add(new Direccion("Domicilio", cp, cs, ciudad, pais));
+            System.out.print("¿Desea añadir otra dirección? (s/n): ");
+        }
+
+        // Añadir nuevas redes sociales
+        System.out.print("¿Desea añadir una red social? (s/n): ");
+        while (sc.nextLine().equalsIgnoreCase("s")) {
+            System.out.print("Nombre de la red social: ");
+            String red = sc.nextLine();
+            System.out.print("Usuario: ");
+            String user = sc.nextLine();
+            contacto.getAtributosGenerales().put(red, user);
+            System.out.print("¿Desea añadir otra red social? (s/n): ");
+        }
+
+        System.out.println("Contacto editado exitosamente.");
+    }
+
 
     public void guardarAgenda(String archivo) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(archivo))) {

@@ -14,17 +14,25 @@ public class Main {
             System.out.println("1. Crear contacto");
             System.out.println("2. Mostrar todos");
             System.out.println("3. Navegar uno a uno");
-            System.out.println("4. Guardar y salir");
+            System.out.println("4. Editar contacto");
+            System.out.println("5. Eliminar contacto");
+            System.out.println("6. Guardar y salir");
             System.out.print("Opción: ");
-            switch (Integer.parseInt(sc.nextLine())) {
-                case 1 -> controlador.crearContacto(sc);
-                case 2 -> controlador.mostrarContactos();
-                case 3 -> controlador.navegarContactos(sc);
-                case 4 -> {
-                    controlador.guardarAgenda("agenda.dat");
-                    salir = true;
+            try {
+                switch (Integer.parseInt(sc.nextLine())) {
+                    case 1 -> controlador.crearContacto(sc);
+                    case 2 -> controlador.mostrarContactos();
+                    case 3 -> controlador.navegarContactos(sc);
+                    case 4 -> controlador.editarContacto(sc);
+                    case 5 -> controlador.eliminarContacto(sc);
+                    case 6 -> {
+                        controlador.guardarAgenda("agenda.dat");
+                        salir = true;
+                    }
+                    default -> System.out.println("Opción inválida.");
                 }
-                default -> System.out.println("Opción inválida.");
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, ingrese un número válido.");
             }
         }
         sc.close();
