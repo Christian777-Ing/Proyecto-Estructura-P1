@@ -217,37 +217,65 @@ class NodoDobleCircular<E> implements Serializable{
 
     public class CircularDoublyLinkedListIterator implements Iterator<E> {
     private NodoDobleCircular<E> current = cabeza;
-    private int count = 0;
+    private boolean initialIteration = (cabeza == null);
 
-    @Override
-    public boolean hasNext() {
-        return count < tamaño;  // size debe estar definido en la clase de la lista
-    }
+        @Override
+        public boolean hasNext() {
+            return tamaño > 0; // Siempre true si la lista no está vacía
+        }
 
-    @Override
-    public E next() {
-        if (!hasNext()) throw new IllegalStateException("No more elements");
-        E data = current.dato;
-        current = current.siguiente;
-        count++;
-        return data;
-    }
+        @Override
+        public E next() {
+            if (tamaño == 0) {
+                throw new IllegalStateException("No se puede avanzar en una lista vacía.");
+            }
 
-    public E previous() {
-        if (current == null || current.anterior == null) throw new IllegalStateException("No previous element");
-        current = current.anterior;
-        return current.dato;
-    }
+            if (!initialIteration) {
+                // Si es la primera vez que se pide un elemento, lo posicionamos en la cabeza
+                current = cabeza;
+                initialIteration = true;
+            } else {
+                // Si ya estamos "navegando", simplemente avanzamos al siguiente.
+                // Aquí es donde 'current.siguiente' DEBE APUNTAR AL NODO CORRECTO (circular)
+                current = current.siguiente;
+            }
+            return current.dato;
+        }
 
-    public E currentData() {
-        if (current == null) throw new IllegalStateException("No current element");
-        return current.dato;
-    }
+        public E previous() {
+            if (tamaño == 0) {
+                throw new IllegalStateException("No se puede retroceder en una lista vacía.");
+            }
 
-    public void reset() {
-        current = cabeza;
-        count = 0;
-    }
+            if (!initialIteration) {
+                // Si es la primera vez que se pide un elemento en reversa, posicionamos en el último
+                current = cabeza.anterior; // El último nodo de la lista circular
+                initialIteration = true;
+            } else {
+                // Retrocedemos al nodo anterior.
+                // Aquí es donde 'current.anterior' DEBE APUNTAR AL NODO CORRECTO (circular)
+                current = current.anterior;
+            }
+            return current.dato;
+        }
+
+        public E currentData() {
+            if (tamaño == 0) {
+                return null; // Lista vacía, no hay dato actual
+            }
+            if (!initialIteration) {
+                // Si currentData() es la primera llamada, nos posicionamos en la cabeza
+                current = cabeza;
+                initialIteration = true;
+            }
+            // Simplemente devolvemos el dato del nodo 'current' actual, sin moverlo.
+            return current.dato;
+        }
+
+        public void reset() {
+            current = cabeza;
+            initialIteration = (cabeza == null);
+        }
 }
 
 

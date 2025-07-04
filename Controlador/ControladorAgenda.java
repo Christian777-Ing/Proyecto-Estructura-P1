@@ -204,69 +204,102 @@ public class ControladorAgenda {
     }
 
     public void navegarContactos(Scanner sc) {
+        // --- 1. Verificación inicial de contactos ---
         if (agenda.getContactos().isEmpty()) {
-            System.out.println("No hay contactos.");
+            System.out.println("No hay contactos en la agenda para navegar.");
             return;
         }
 
-        CircledDoubleLinkedList<Contacto> circularList = null;
+        // --- 2. Verificación del tipo de lista ---
+        CircledDoubleLinkedList<Contacto> circularList;
         if (agenda.getContactos() instanceof CircledDoubleLinkedList) {
             circularList = (CircledDoubleLinkedList<Contacto>) agenda.getContactos();
         } else {
-            System.out.println("La navegación circular solo funciona con CircledDoubleLinkedList.");
+            System.out.println("La navegación circular solo funciona con una CircledDoubleLinkedList.");
+            System.out.println("Asegúrate de que tu agenda esté configurada con este tipo de lista para usar esta función.");
             return;
         }
 
+        // --- 3. Inicialización del iterador ---
+        // Se crea un nuevo iterador para empezar siempre desde el inicio lógico (cabeza)
         CircledDoubleLinkedList<Contacto>.CircularDoublyLinkedListIterator iter =
                 circularList.new CircularDoublyLinkedListIterator();
 
         String op;
         do {
-            Contacto currentContact = iter.currentData();
-            if (currentContact != null) {
-                System.out.println("\n--- Contacto Actual ---");
-                System.out.println(currentContact);
-
-                // Mostrar contactos relacionados si los hay
-                if (currentContact.getContactosRelacionados() != null && !currentContact.getContactosRelacionados().isEmpty()) {
-                    System.out.println("\n--- Contactos Relacionados ---");
-                    for (int i = 0; i < currentContact.getContactosRelacionados().size(); i++) {
-                        Contacto related = currentContact.getContactosRelacionados().get(i);
-                        System.out.println((i + 1) + ". " + related.getNombre() + " (" + related.getTelefonoPrincipal() + ")");
-                    }
-                    System.out.print("Ingrese el número del contacto relacionado para ver detalles, o 0 para ignorar: ");
-                    try {
-                        int choice = Integer.parseInt(sc.nextLine());
-                        if (choice > 0 && choice <= currentContact.getContactosRelacionados().size()) {
-                            Contacto selectedRelated = currentContact.getContactosRelacionados().get(choice - 1);
-                            System.out.println("\n--- Detalles del Contacto Relacionado: " + selectedRelated.getNombre() + " ---");
-                            System.out.println(selectedRelated.toString());
-                            System.out.println("\nPresione Enter para continuar...");
-                            sc.nextLine();
-                        } else if (choice != 0) {
-                            System.out.println("Opción de contacto relacionado inválida.");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Entrada inválida. Por favor, ingrese un número.");
-                    }
-                }
-
-            } else {
-                System.out.println("\nNo hay contactos para navegar.");
-                break;
+            // --- 4. Obtener y mostrar el contacto actual ---
+            Contacto currentContact;
+            try {
+                // currentData() debería devolver el contacto actual.
+                // Si la lista no está vacía, no debería ser null aquí.
+                currentContact = iter.currentData();
+            } catch (IllegalStateException e) {
+                // Esta excepción indica un problema fundamental en el iterador o lista (e.g., lista vacía inesperadamente)
+                System.out.println("Error al obtener el contacto actual: " + e.getMessage());
+                System.out.println("Saliendo de la navegación de contactos.");
+                break; // Salir del bucle
             }
 
+            // Esta condición solo se debería dar si la lista se vacía DESPUÉS de entrar al método,
+            // o si currentData() devuelve null en una lista no vacía, lo cual sería un bug del iterador.
+            if (currentContact == null) {
+                System.out.println("\nNo hay contactos válidos para navegar en este momento.");
+                break; // Salir del bucle
+            }
+
+            System.out.println("\n--- Contacto Actual ---");
+            System.out.println(currentContact.toString()); // Usamos .toString() para asegurar la representación completa
+
+            // --- 5. Mostrar contactos relacionados (si existen) ---
+            if (currentContact.getContactosRelacionados() != null && !currentContact.getContactosRelacionados().isEmpty()) {
+                System.out.println("\n--- Contactos Relacionados ---");
+                for (int i = 0; i < currentContact.getContactosRelacionados().size(); i++) {
+                    Contacto related = currentContact.getContactosRelacionados().get(i);
+                    System.out.println((i + 1) + ". " + related.getNombre() + " (Teléfono Principal: " + related.getTelefonoPrincipal() + ")");
+                }
+                System.out.print("Ingrese el número del contacto relacionado para ver detalles, o 0 para ignorar: ");
+                try {
+                    int choice = Integer.parseInt(sc.nextLine());
+                    if (choice > 0 && choice <= currentContact.getContactosRelacionados().size()) {
+                        Contacto selectedRelated = currentContact.getContactosRelacionados().get(choice - 1);
+                        System.out.println("\n--- Detalles del Contacto Relacionado: " + selectedRelated.getNombre() + " ---");
+                        System.out.println(selectedRelated.toString());
+                        System.out.println("\nPresione Enter para continuar...");
+                        sc.nextLine(); // Pausa después de mostrar detalles
+                    } else if (choice != 0) {
+                        System.out.println("Opción de contacto relacionado inválida. Intente de nuevo.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Entrada inválida. Por favor, ingrese un número.");
+                }
+            }
+
+            // --- 6. Opciones de navegación ---
             System.out.print("[s]iguiente, [a]nterior, [q]uit: ");
             op = sc.nextLine();
 
+            // --- 7. Mover el iterador ---
             if (op.equalsIgnoreCase("s")) {
-                iter.next();
+                try {
+                    iter.next(); // Intenta avanzar
+                } catch (IllegalStateException e) {
+                    System.out.println("Error al intentar avanzar: " + e.getMessage());
+                    // Esto no debería ocurrir si la lista no está vacía y el iterador es correcto.
+                    // Podrías considerar un 'break;' aquí si esto es un error crítico.
+                }
             } else if (op.equalsIgnoreCase("a")) {
-                iter.previous();
+                try {
+                    iter.previous(); // Intenta retroceder
+                } catch (IllegalStateException e) {
+                    System.out.println("Error al intentar retroceder: " + e.getMessage());
+                    // Similar al caso de 'next()', si la lista no está vacía, no debería fallar.
+                }
             }
-        } while (!op.equalsIgnoreCase("q"));
+        } while (!op.equalsIgnoreCase("q")); // Continuar hasta que el usuario ingrese 'q'
+        System.out.println("Saliendo de la navegación de contactos.");
     }
 
+    // ... (tu método eliminarContacto, etc.)
     public void eliminarContacto(Scanner sc) {
         System.out.print("Ingrese el teléfono principal (solo el número) del contacto a eliminar: ");
         String telefono = sc.nextLine();
